@@ -56,6 +56,7 @@ public class MinaServer extends AbstractServer {
     @Override
     protected void doOpen() throws Throwable {
         // set thread pool.
+        // 分配一个线程 打开socket 监听 对应的端口
         acceptor = new SocketAcceptor(getUrl().getPositiveParameter(Constants.IO_THREADS_KEY, Constants.DEFAULT_IO_THREADS),
                 Executors.newCachedThreadPool(new NamedThreadFactory("MinaServerWorker",
                         true)));

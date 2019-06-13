@@ -74,6 +74,7 @@ public abstract class AbstractProtocol implements Protocol {
                     if (logger.isInfoEnabled()) {
                         logger.info("Unexport service: " + exporter.getInvoker().getUrl());
                     }
+                    // 从注册中心取消发布的服务
                     exporter.unexport();
                 } catch (Throwable t) {
                     logger.warn(t.getMessage(), t);

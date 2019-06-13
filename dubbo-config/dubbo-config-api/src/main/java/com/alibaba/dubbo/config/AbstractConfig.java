@@ -37,6 +37,8 @@ import java.util.regex.Pattern;
 
 /**
  * Utility methods and public methods for parsing configuration
+ * 各种config 的基本 抽象类, 各种config中都有各自的属性, 比如 protocolConfig 中有 自己的协议, 用户名等. RegistryConfig 有注册中心的地址, 端口, 协议, 超时等然后各个config中均提供
+ * 对应字段的get/set方法, 本类利用反射解析各种config中的属性值, 然后利用各种属性值拼接URL, URL发送到注册中心进行注册,或者从注册中心订阅URL解析成对应的地址等
  *
  * @export
  */
@@ -97,6 +99,7 @@ public abstract class AbstractConfig implements Serializable {
         return value;
     }
 
+    /*将系统中配置的properties, 发射调用set方法, 将数据set进传进来的config中*/
     protected static void appendProperties(AbstractConfig config) {
         if (config == null) {
             return;
@@ -113,12 +116,14 @@ public abstract class AbstractConfig implements Serializable {
                     String value = null;
                     if (config.getId() != null && config.getId().length() > 0) {
                         String pn = prefix + config.getId() + "." + property;
+                        // 尝试获取用户系统自己配置的property, 类似 dubbo.的配置文件
                         value = System.getProperty(pn);
                         if (!StringUtils.isBlank(value)) {
                             logger.info("Use System Property " + pn + " to config dubbo");
                         }
                     }
                     if (value == null || value.length() == 0) {
+                        // 尝试获取用户系统自己配置的property, 无 dubbo.的配置文件
                         String pn = prefix + property;
                         value = System.getProperty(pn);
                         if (!StringUtils.isBlank(value)) {
@@ -136,6 +141,8 @@ public abstract class AbstractConfig implements Serializable {
                                 getter = null;
                             }
                         }
+
+                        // 通过get方法获取dubbo中的default配置
                         if (getter != null) {
                             if (getter.invoke(config, new Object[0]) == null) {
                                 if (config.getId() != null && config.getId().length() > 0) {

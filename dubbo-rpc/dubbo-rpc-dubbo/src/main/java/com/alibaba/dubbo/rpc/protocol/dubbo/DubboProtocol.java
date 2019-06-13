@@ -226,6 +226,7 @@ public class DubboProtocol extends AbstractProtocol {
 
         // export service.
         String key = serviceKey(url);
+        // 将invoker 封装进入 exporter中
         DubboExporter<T> exporter = new DubboExporter<T>(invoker, key, exporterMap);
         exporterMap.put(key, exporter);
 
@@ -278,6 +279,7 @@ public class DubboProtocol extends AbstractProtocol {
         url = url.addParameter(Constants.CODEC_KEY, DubboCodec.NAME);
         ExchangeServer server;
         try {
+            // 连注册中心
             server = Exchangers.bind(url, requestHandler);
         } catch (RemotingException e) {
             throw new RpcException("Fail to start server(url: " + url + ") " + e.getMessage(), e);

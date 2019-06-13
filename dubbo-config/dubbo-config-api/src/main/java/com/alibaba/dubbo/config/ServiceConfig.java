@@ -207,12 +207,14 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
         }
 
         if (delay != null && delay > 0) {
+            // 根据延迟发布服务配置项进行异步延迟发布
             delayExportExecutor.schedule(new Runnable() {
                 public void run() {
                     doExport();
                 }
             }, delay, TimeUnit.MILLISECONDS);
         } else {
+            // 立即发布服务
             doExport();
         }
     }
@@ -228,7 +230,9 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
         if (interfaceName == null || interfaceName.length() == 0) {
             throw new IllegalStateException("<dubbo:service interface=\"\" /> interface not allow null!");
         }
+        // prociderConfig 内的地址/端口等数据的检查, 如果没有配置则进行系统default获取
         checkDefault();
+        // 下边就是各种获取 配置
         if (provider != null) {
             if (application == null) {
                 // 获取applicationConfig
@@ -287,6 +291,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
 
             generic = Boolean.FALSE.toString();
         }
+        // 要不要本地暴露服务,
         if (local != null) {
             if ("true".equals(local)) {
                 local = interfaceName + "Local";
@@ -301,6 +306,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
                 throw new IllegalStateException("The local implementation class " + localClass.getName() + " not implement interface " + interfaceName);
             }
         }
+        // 要不要远端暴露, 默认的情况下 本地 和远端均暴露这个服务
         if (stub != null) {
             if ("true".equals(stub)) {
                 stub = interfaceName + "Stub";
@@ -315,7 +321,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
                 throw new IllegalStateException("The stub implementation class " + stubClass.getName() + " not implement interface " + interfaceName);
             }
         }
-        // 检查并各种Config
+        // 检查并各种Config, 如果经过上述还没有完成property数据读取配置的话还会再次进行 default的property的读取
         checkApplication();
         checkRegistry();
         checkProtocol();
@@ -324,6 +330,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
         if (path == null || path.length() == 0) {
             path = interfaceName;
         }
+        // url 暴露服务
         doExportUrls();
         ProviderModel providerModel = new ProviderModel(getUniqueServiceName(), this, ref);
         ApplicationModel.initProviderModel(getUniqueServiceName(), providerModel);
@@ -384,6 +391,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
         if (ConfigUtils.getPid() > 0) {
             map.put(Constants.PID_KEY, String.valueOf(ConfigUtils.getPid()));
         }
+        // 将各种配置装配到map中
         appendParameters(map, application);
         appendParameters(map, module);
         appendParameters(map, provider, Constants.DEFAULT_KEY);
@@ -514,9 +522,19 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
                         if (logger.isInfoEnabled()) {
                             logger.info("Register dubbo service " + interfaceClass.getName() + " url " + url + " to registry " + registryURL);
                         }
+                        // invoker 泛型化, 将要发布的服务的接口穿进去, 形成对应的invoker
+                        /*Invoker 是实体域，它是 Dubbo 的核心模型，其它模型都向它靠扰，或转换成它。
+                          它代表一个可执行体，可向它发起 invoke 调用。
+                          它有可能是一个本地的实现，也可能是一个远程的实现，也可能一个集群实现。
+                        */
                         Invoker<?> invoker = proxyFactory.getInvoker(ref, (Class) interfaceClass, registryURL.addParameterAndEncoded(Constants.EXPORT_KEY, url.toFullString()));
                         DelegateProviderMetaDataInvoker wrapperInvoker = new DelegateProviderMetaDataInvoker(invoker, this);
 
+                        // 发布这项服务 wrapperInvoker 中包括了我们 我们的接口和我们的配置 serviceConfig
+                        /*Protocol 是服务域，它是 Invoker 暴露和引用的主功能入口。
+                        它负责 Invoker 的生命周期管理。
+                        */
+                        // TODO: 19-6-13 这里是服务发布入口
                         Exporter<?> exporter = protocol.export(wrapperInvoker);
                         exporters.add(exporter);
                     }

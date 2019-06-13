@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>com.alibaba.dubbo.rpc.protocol.dubbo.DubboProtocol</OriginalElement>
+  <nodes>
+    <node x="116.0" y="0.0">com.alibaba.dubbo.common.extension.SPI</node>
+    <node x="70.0" y="164.0">com.alibaba.dubbo.rpc.protocol.AbstractProtocol</node>
+    <node x="0.0" y="246.0">com.alibaba.dubbo.rpc.protocol.http.HttpProtocol</node>
+    <node x="98.0" y="82.0">com.alibaba.dubbo.rpc.Protocol</node>
+    <node x="158.0" y="246.0">com.alibaba.dubbo.rpc.protocol.dubbo.DubboProtocol</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="com.alibaba.dubbo.rpc.protocol.dubbo.DubboProtocol" target="com.alibaba.dubbo.rpc.protocol.AbstractProtocol">
+      <point x="0.0" y="-16.0" />
+      <point x="235.0" y="221.0" />
+      <point x="193.0" y="221.0" />
+      <point x="41.0" y="16.0" />
+    </edge>
+    <edge source="com.alibaba.dubbo.rpc.Protocol" target="com.alibaba.dubbo.common.extension.SPI">
+      <point x="0.0" y="-16.0" />
+      <point x="0.0" y="16.0" />
+    </edge>
+    <edge source="com.alibaba.dubbo.rpc.protocol.AbstractProtocol" target="com.alibaba.dubbo.rpc.Protocol">
+      <point x="0.0" y="-16.0" />
+      <point x="0.0" y="16.0" />
+    </edge>
+    <edge source="com.alibaba.dubbo.rpc.protocol.http.HttpProtocol" target="com.alibaba.dubbo.rpc.protocol.AbstractProtocol">
+      <point x="0.0" y="-16.0" />
+      <point x="69.0" y="221.0" />
+      <point x="111.0" y="221.0" />
+      <point x="-41.0" y="16.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="-357.5" y="-38.0" />
+  <SelectedNodes>
+    <node>com.alibaba.dubbo.rpc.protocol.http.HttpProtocol</node>
+  </SelectedNodes>
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
