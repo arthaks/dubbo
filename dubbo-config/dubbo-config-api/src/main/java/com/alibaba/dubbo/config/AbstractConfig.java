@@ -182,6 +182,7 @@ public abstract class AbstractConfig implements Serializable {
 
     @SuppressWarnings("unchecked")
     protected static void appendParameters(Map<String, String> parameters, Object config, String prefix) {
+        logger.info("req parameters = " + parameters.toString());
         if (config == null) {
             return;
         }
@@ -245,6 +246,8 @@ public abstract class AbstractConfig implements Serializable {
                 throw new IllegalStateException(e.getMessage(), e);
             }
         }
+
+        logger.info("resp parameters = " + parameters.toString());
     }
 
     protected static void appendAttributes(Map<Object, Object> parameters, Object config) {

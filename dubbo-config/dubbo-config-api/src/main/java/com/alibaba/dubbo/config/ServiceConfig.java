@@ -192,6 +192,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
         return unexported;
     }
 
+    // 将相关配置组装,并暴露service, ServiceConfig 及其父类 以组合的方式 关联其他各种config, 包括methodConfig protocolConfig 等 由此处组装成对应的URL
     public synchronized void export() {
         if (provider != null) {
             if (export == null) {
@@ -230,18 +231,23 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
         checkDefault();
         if (provider != null) {
             if (application == null) {
+                // 获取applicationConfig
                 application = provider.getApplication();
             }
             if (module == null) {
+                // 获取 ModuleConfig
                 module = provider.getModule();
             }
             if (registries == null) {
+                // 获取 RegistryConfig 可以是多注册中心配置
                 registries = provider.getRegistries();
             }
             if (monitor == null) {
+                // 获取 MonitorConfig
                 monitor = provider.getMonitor();
             }
             if (protocols == null) {
+                // 获取 ProtocolConfig 配置
                 protocols = provider.getProtocols();
             }
         }
@@ -268,13 +274,17 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
             }
         } else {
             try {
+                // 获取dubbo 暴露的service的 接口类型
                 interfaceClass = Class.forName(interfaceName, true, Thread.currentThread()
                         .getContextClassLoader());
             } catch (ClassNotFoundException e) {
                 throw new IllegalStateException(e.getMessage(), e);
             }
+            // 检查配置的暴露的方法在此接口中的合法性
             checkInterfaceAndMethods(interfaceClass, methods);
+            // 检查实现类和暴露的service接口是对应的实现
             checkRef();
+
             generic = Boolean.FALSE.toString();
         }
         if (local != null) {
@@ -305,6 +315,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
                 throw new IllegalStateException("The stub implementation class " + stubClass.getName() + " not implement interface " + interfaceName);
             }
         }
+        // 检查并各种Config
         checkApplication();
         checkRegistry();
         checkProtocol();
@@ -352,7 +363,9 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private void doExportUrls() {
+        // 搞 RegistryConfig 注册中心的配置
         List<URL> registryURLs = loadRegistries(true);
+        // 搞 协议的配置
         for (ProtocolConfig protocolConfig : protocols) {
             doExportUrlsFor1Protocol(protocolConfig, registryURLs);
         }
@@ -468,6 +481,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
 
         String host = this.findConfigedHosts(protocolConfig, registryURLs, map);
         Integer port = this.findConfigedPorts(protocolConfig, name, map);
+        // 至此拼装完成 对应的需要暴露的服务的url
         URL url = new URL(name, host, port, (contextPath == null || contextPath.length() == 0 ? "" : contextPath + "/") + path, map);
 
         if (ExtensionLoader.getExtensionLoader(ConfiguratorFactory.class)
@@ -490,6 +504,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
                     logger.info("Export dubbo service " + interfaceClass.getName() + " to url " + url);
                 }
                 if (registryURLs != null && !registryURLs.isEmpty()) {
+                    // 拿出 注册中心配置
                     for (URL registryURL : registryURLs) {
                         url = url.addParameterIfAbsent("dynamic", registryURL.getParameter("dynamic"));
                         URL monitorUrl = loadMonitor(registryURL);

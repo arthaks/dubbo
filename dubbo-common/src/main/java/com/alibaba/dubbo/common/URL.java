@@ -1153,6 +1153,9 @@ public final class URL implements Serializable {
         return buildString(appendUser, appendParameter, false, false, parameters);
     }
 
+
+
+//    protocol://username:password@host:port/path?key=value&key=value, 返回这种格式， 由生产者提供到注册中心， 返回这么个string， 提供给消费者使用
     private String buildString(boolean appendUser, boolean appendParameter, boolean useIP, boolean useService, String... parameters) {
         StringBuilder buf = new StringBuilder();
         if (protocol != null && protocol.length() > 0) {
