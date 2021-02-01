@@ -106,6 +106,7 @@ public class DubboBeanDefinitionParser implements BeanDefinitionParser {
             beanDefinition.getPropertyValues().addPropertyValue("id", id);
         }
         if (ProtocolConfig.class.equals(beanClass)) {
+            // 如果是协议类的配置，进行解析
             for (String name : parserContext.getRegistry().getBeanDefinitionNames()) {
                 BeanDefinition definition = parserContext.getRegistry().getBeanDefinition(name);
                 PropertyValue property = definition.getPropertyValues().getPropertyValue("protocol");

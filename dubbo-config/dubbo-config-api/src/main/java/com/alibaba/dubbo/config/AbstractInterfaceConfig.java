@@ -189,6 +189,7 @@ public abstract class AbstractInterfaceConfig extends AbstractMethodConfig {
                     }
                     List<URL> urls = UrlUtils.parseURLs(address, map);
                     for (URL url : urls) {
+                        logger.info("loadRegistries， get url "+url.toString());
                         url = url.addParameter(Constants.REGISTRY_KEY, url.getProtocol());
                         url = url.setProtocol(Constants.REGISTRY_PROTOCOL);
                         if ((provider && url.getParameter(Constants.REGISTER_KEY, true))

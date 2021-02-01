@@ -230,7 +230,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
         if (interfaceName == null || interfaceName.length() == 0) {
             throw new IllegalStateException("<dubbo:service interface=\"\" /> interface not allow null!");
         }
-        // prociderConfig 内的地址/端口等数据的检查, 如果没有配置则进行系统default获取
+        // providerConfig 内的地址/端口等数据的检查, 如果没有配置则进行系统default获取
         checkDefault();
         // 下边就是各种获取 配置
         if (provider != null) {
@@ -384,6 +384,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
             name = "dubbo";
         }
 
+        logger.info("doExportUrlsFor1Protocol, name = " + name);
         Map<String, String> map = new HashMap<String, String>();
         map.put(Constants.SIDE_KEY, Constants.PROVIDER_SIDE);
         map.put(Constants.DUBBO_VERSION_KEY, Version.getVersion());

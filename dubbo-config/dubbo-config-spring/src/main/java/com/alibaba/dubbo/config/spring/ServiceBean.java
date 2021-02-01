@@ -113,6 +113,7 @@ public class ServiceBean<T> extends ServiceConfig<T> implements InitializingBean
         return service;
     }
 
+    // 容器初始化完成之后调用这里
     public void onApplicationEvent(ContextRefreshedEvent event) {
         logger.info("onApplicationEvent, spring start refresh and duboo service export");
         if (isDelay() && !isExported() && !isUnexported()) {

@@ -99,7 +99,7 @@ public abstract class AbstractConfig implements Serializable {
         return value;
     }
 
-    /*将系统中配置的properties, 发射调用set方法, 将数据set进传进来的config中*/
+    /*将系统中配置的properties, 反射调用set方法, 将数据set进传进来的config中*/
     protected static void appendProperties(AbstractConfig config) {
         if (config == null) {
             return;
